@@ -160,7 +160,30 @@ def file_read(file_name,folder_path,cursor):
             row = [val.strip() for val in row]  # remove extra whitespace
             cursor.execute(sql, row)  # insert row
 
-
+def add_customized_model(mid, bmid):
+    db = None
+    try:
+        db = mysql.connector.connect(
+            host="host",
+            user="user",
+            password="password",
+            database="cs122a_hw2",
+        ) 
+        cursor = db.cursor()
+            
+        query = "INSERT INTO CustomizedModel (mid, bmid) VALUES (%s, %s)"
+        cursor.execute(query, (mid, bmid))
+        db.commit()
+        print("Success")
+        
+    except mysql.connector.Error as e:
+        print("Fail")
+        
+    finally:
+        if db is not None and db.is_connected():
+            cursor.close()
+            db.close()
+    
 
 
 def main():
@@ -178,6 +201,11 @@ def main():
     #put your function and needed arguments in here
     if(sys.argv[1]=="import"):
        import_data(cursor,mydb,sys.argv[2])
+
+    if sys.argv[1] == "addCustomizedModel":
+        mid = int(sys.argv[2])
+        bmid = int(sys.argv[3])
+        add_customized_model(mid, bmid)
  
 
 
