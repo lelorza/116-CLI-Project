@@ -9,7 +9,7 @@ def insert_agent_client(uid, username, email, cardno, cardholder, expire, cvv, z
             host="host",
             user="user",
             password="password",
-            database="cs122a",
+            database="cs122a_hw2",
         )
 
         cursor = db.cursor()
