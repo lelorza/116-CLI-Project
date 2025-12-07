@@ -32,8 +32,8 @@ def insert_agent_client(uid, username, email, cardno, cardholder, expire, cvv, z
 
         db.commit()
 
-    except mysql.connector.Error as err:
-        print("Error:", err)
+    except mysql.connector.Error as e:
+        print("Error:", e)
 
     finally:
         if db is not None and db.is_connected():
