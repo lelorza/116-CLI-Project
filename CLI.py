@@ -160,7 +160,31 @@ def file_read(file_name,folder_path,cursor):
             row = [val.strip() for val in row]  # remove extra whitespace
             cursor.execute(sql, row)  # insert row
 
-def add_customized_model(mid, bmid):
+def insert_agent_client(cursor, uid, username, email, cardno, carholder, expire, zip_code, interests):
+    try:
+        # Insert into User table
+        cursor.execute(
+            "INSERT INTO User (uid, username, email) VALUES (%s, %s %s)",
+            (uid, username, email)
+        )
+        # Insert into AgentClient table
+        cursor.execute(
+            """
+            INSERT INTO AgentClient
+            (uid, interests, cardholder, expire, cardno, cvv, zip)
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
+            """,
+            (uid, interests, cardholder, expire, cardno, cvv, zip)
+        )
+        cursor,connection.commit()
+        print("Success")
+    
+    except mysql.connector.Error as e:
+        print("Fail")
+
+
+
+def add_customized_model(cursor, mid, bmid):
     try:
         query = "INSERT INTO CustomizedModel (mid, bmid) VALUES (%s, %s)"
         cursor.execute(query, (mid, bmid))
@@ -201,6 +225,17 @@ def main():
     #put your function and needed arguments in here
     if(sys.argv[1]=="import"):
        import_data(cursor,mydb,sys.argv[2])
+    elif sys.argv[1] == "insertAgentClient":
+        uid = int(sys.argv[2])
+        username = sys.argv[3]
+        email = sys.argv[4]
+        cardno = int(sys.argv[5])
+        cardholder = sys.argv[6]
+        expire = sys.argv[7]
+        cvv = int(sys.argv[8])
+        zip_code = int(sys.argv[9])
+        interests = sys.argv[10]
+        insert_agent_client(cursor, uid, username, email, cardno, cardholder, expire, cvv, zip_code, interests)
     elif sys.argv[1] == "addCustomizedModel":
         mid = int(sys.argv[2])
         bmid = int(sys.argv[3])
