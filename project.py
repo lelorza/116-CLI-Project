@@ -35,7 +35,7 @@ def import_data(cursor, mydb,folder_name):
         interests TEXT NOT NULL,
         cardholder TEXT NOT NULL,
         expire DATE NOT NULL,
-        cardno INT NOT NULL,
+        cardno BIGINT NOT NULL,
         cvv INT NOT NULL,
         zip INT NOT NULL,
         PRIMARY KEY (uid),
@@ -132,18 +132,24 @@ def import_data(cursor, mydb,folder_name):
     folder_path = os.path.join(script_dir, folder_name)
     #needs to be in an order
     #can't just read sequentially from folder
-    file_read("User.csv",folder_path,cursor)
-    file_read("AgentCreator.csv",folder_path,cursor)
-    file_read("AgentClient.csv",folder_path,cursor)
-    file_read("BaseModel.csv",folder_path,cursor)
-    file_read("CustomizedModel.csv",folder_path,cursor)
-    file_read("Configuration.csv",folder_path,cursor)
-    file_read("InternetService.csv",folder_path,cursor)
-    file_read("LLMService.csv",folder_path,cursor)
-    file_read("DataStorage.csv",folder_path,cursor)
-    file_read("ModelServices.csv",folder_path,cursor)
-    file_read("ModelConfigurations.csv",folder_path,cursor)
-    mydb.commit()
+    try:
+        file_read("User.csv",folder_path,cursor)
+        file_read("AgentCreator.csv",folder_path,cursor)
+        file_read("AgentClient.csv",folder_path,cursor)
+        file_read("BaseModel.csv",folder_path,cursor)
+        file_read("CustomizedModel.csv",folder_path,cursor)
+        file_read("Configuration.csv",folder_path,cursor)
+        file_read("InternetService.csv",folder_path,cursor)
+        file_read("LLMService.csv",folder_path,cursor)
+        file_read("DataStorage.csv",folder_path,cursor)
+        file_read("ModelServices.csv",folder_path,cursor)
+        file_read("ModelConfigurations.csv",folder_path,cursor)
+    except mysql.connector.Error as e:
+        mydb.rollback()
+        print("Fail")
+    else:
+        mydb.commit()
+        print("Success")
 
 def file_read(file_name,folder_path,cursor):
     file_path = os.path.join(folder_path, file_name)
