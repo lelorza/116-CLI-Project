@@ -201,6 +201,22 @@ def delete_base_model(mydb, cursor, bmid):
         print("Success")
     except mysql.connector.Error as e:
         print("Fail")
+
+def countCustomizedModel(bmodels,cursor):
+    # Adds variable amount of base model IDs for the SQL
+    placeholders = ", ".join(["%s"] * len(bmodels))
+    sql = f"""
+        SELECT bmid, COUNT(*) AS num_customized
+        FROM CustomizedModel
+        WHERE bmid IN ({placeholders})
+        GROUP BY bmid
+        ORDER BY bmid ASC;
+    """
+    
+    cursor.execute(sql, bmodels)
+    rows = cursor.fetchall()
+    for row in rows:
+        print(row)
         
 def listBaseModelKeyWord(cursor,keyword):
     key = f"%{keyword}%"
@@ -252,6 +268,10 @@ def main():
     elif sys.argv[1] == "deleteBaseModel":
         bmid = int(sys.argv[2])
         delete_base_model(mydb, cursor, bmid)
+    elif sys.argv[1] == "countCustomizedModel":
+        input_bmids = sys.argv[2:]
+        unique_bmids = sorted({int(x) for x in input_bmids})
+        countCustomizedModel(unique_bmids,cursor)
     elif(sys.argv[1]=="listBaseModelKeyWord"):
         listBaseModelKeyWord(cursor,sys.argv[2])
  
