@@ -160,7 +160,7 @@ def file_read(file_name,folder_path,cursor):
             row = [val.strip() for val in row]  # remove extra whitespace
             cursor.execute(sql, row)  # insert row
 
-def insert_agent_client(mydb, cursor, uid, username, email, cardno, cardholder, expire, zip_code, interests):
+def insert_agent_client(mydb, cursor, uid, username, email, cardno, cardholder, expire, cvv, zip_code, interests):
     try:
         # Insert into User table
         cursor.execute(
