@@ -168,11 +168,6 @@ def file_read(file_name,folder_path,cursor):
 
 def insert_agent_client(mydb, cursor, uid, username, email, cardno, cardholder, expire, cvv, zip_code, interests):
     try:
-        # Insert into User table
-        cursor.execute(
-            "INSERT INTO User (uid, username, email) VALUES (%s, %s, %s)",
-            (uid, username, email)
-        )
         # Insert into AgentClient table
         cursor.execute(
             """
